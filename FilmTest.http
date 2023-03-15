@@ -1,0 +1,73 @@
+POST http://127.0.0.1:8080/films
+Content-Type: application/json
+
+{
+  "id": "1",
+  "title": "Jurassic Park",
+  "year": "1993",
+  "genre": "Sci-fi",
+  "director": "Steven Spielberg",
+  "comments": null
+}
+
+
+###
+POST http://127.0.0.1:8080/films
+Content-Type: application/json
+
+{
+  "id": "2",
+  "title": "Back to the future",
+  "year": "1985",
+  "genre": "Sci-fi",
+  "director": "Robert Zemeckis",
+  "comments": null
+}
+
+###
+POST http://127.0.0.1:8080/films
+Content-Type: application/json
+
+{
+  "id": "3",
+  "title": "The Goonies",
+  "year": "1985",
+  "genre": "Adventure",
+  "director": "Richard Donner",
+  "comments": null
+}
+
+
+###
+GET http://127.0.0.1:8080/films
+Accept: application/json
+
+###
+GET http://127.0.0.1:8080/films/2
+Accept: application/json
+
+###
+GET http://127.0.0.1:8080/films/500
+Accept: application/json
+
+###
+PUT http://127.0.0.1:8080/films/3
+Content-Type: application/json
+
+{
+  "id": "3",
+  "title": "The Goonies",
+  "year": "1985",
+  "genre": "Adventure",
+  "director": "Richard Glover"
+}
+
+###
+GET http://127.0.0.1:8080/films/3
+Accept: application/json
+
+###
+DELETE http://127.0.0.1:8080/films/3
+
+###
+DELETE http://127.0.0.1:8080/customer/500
