@@ -3,10 +3,12 @@ package com.example.routes
 import com.example.models.Film
 import com.example.models.filmStorage
 import io.ktor.http.*
+import io.ktor.http.content.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import java.io.File
 
 fun Route.filmRouting() {
     route("/films") {
@@ -26,7 +28,33 @@ fun Route.filmRouting() {
             call.respond(film)
         }
         post {
-            val film = call.receive<Film>()
+            val multipartData = call.receiveMultipart()
+            val film = Film("","","","","","", mutableListOf())
+            multipartData.forEachPart {
+                when(it) {
+                    is PartData.FormItem -> {
+                        when(it.name) {
+                            "id" -> film.id = it.value
+                            "title"  -> film.title = it.value
+                            "year"  -> film.year = it.value
+                            "genre"  -> film.genre = it.value
+                            "director"  -> film.director = it.value
+                        }
+                    }
+                    is PartData.FileItem -> {
+                        val pathToImg = "http://0.0.0.0:8080/uploads/"
+                        if (it.originalFileName == "") {
+                            film.cover = "default-movie.jpg"
+                        } else {
+                            film.cover =  it.originalFileName as String
+                            var fileBytes = it.streamProvider().readBytes()
+                            File("uploads/${film.cover}").writeBytes(fileBytes)
+                            film.cover = pathToImg + film.cover
+                        }
+                    }
+                    else -> {}
+                }
+            }
             filmStorage.add(film)
             call.respondText("Film added correctly", status = HttpStatusCode.Accepted)
         }
