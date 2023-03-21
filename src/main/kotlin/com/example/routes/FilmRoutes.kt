@@ -27,6 +27,17 @@ fun Route.filmRouting() {
             )
             call.respond(film)
         }
+        get("{id?}/cover") {
+            val id = call.parameters["id"] ?: return@get call.respondText(
+                "Missing id",
+                status = HttpStatusCode.BadRequest
+            )
+            val film = filmStorage.find { it.id == id } ?: return@get call.respondText(
+                "Film with id $id not found",
+                status = HttpStatusCode.NotFound
+            )
+            call.respondFile(File(film.cover))
+        }
         post {
             val multipartData = call.receiveMultipart()
             val film = Film("","","","","","", mutableListOf())
@@ -42,7 +53,7 @@ fun Route.filmRouting() {
                         }
                     }
                     is PartData.FileItem -> {
-                        val pathToImg = "http://0.0.0.0:8080/uploads/"
+                        val pathToImg = "uploads/"
                         if (it.originalFileName == "") {
                             film.cover = "default-movie.jpg"
                         } else {
